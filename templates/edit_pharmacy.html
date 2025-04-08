@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>تعديل بيانات الصيدلية</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f9f9f9; margin: 20px; padding: 20px; }
+        h2 { color: #333; margin-bottom: 15px; }
+        form { max-width: 400px; background-color: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 4px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; }
+        input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        input[type="submit"], .back-btn { background-color: #007BFF; color: white; border: none; padding: 8px 12px; cursor: pointer; margin-top: 10px; text-decoration: none; display: inline-block; }
+        input[type="submit"]:hover, .back-btn:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+    <h2>تعديل بيانات الصيدلية</h2>
+    <form action="{{ url_for('edit_pharmacy', pharmacy_id=pharmacy['pharmacy_id']) }}" method="post">
+        <div class="form-group">
+            <label>اسم الصيدلية:</label>
+            <input type="text" name="name" value="{{ pharmacy['name'] }}" required>
+        </div>
+        <div class="form-group">
+            <label>خط العرض:</label>
+            <input type="number" step="any" name="latitude" value="{{ pharmacy['latitude'] }}" required>
+        </div>
+        <div class="form-group">
+            <label>خط الطول:</label>
+            <input type="number" step="any" name="longitude" value="{{ pharmacy['longitude'] }}" required>
+        </div>
+        <input type="submit" value="حفظ التعديلات">
+    </form>
+    <br>
+    <a class="back-btn" href="{{ url_for('index') }}">رجوع للصفحة الرئيسية</a>
+</body>
+</html>

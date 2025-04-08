@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة الصيدليات والأدوية</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f9f9f9; margin: 20px; padding: 20px; }
+        h1, h2, h3 { color: #333; margin-bottom: 15px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; background-color: #fff; border: 1px solid #ddd; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+        th { background-color: #f2f2f2; color: #000; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        form { margin-bottom: 15px; display: inline; }
+        input, select, button { padding: 8px; margin: 5px 0; width: 100%; box-sizing: border-box; border: 1px solid #ddd; border-radius: 4px; }
+        input[type="submit"], button { width: auto; background-color: #007BFF; color: white; border: none; cursor: pointer; }
+        input[type="submit"]:hover, button:hover { background-color: #0056b3; }
+        .form-group { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h1>إدارة الصيدليات والأدوية</h1>
+
+    <!-- إدارة الصيدليات -->
+    <h2>الصيدليات</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>رقم الصيدلية</th>
+                <th>اسم الصيدلية</th>
+                <th>خط العرض</th>
+                <th>خط الطول</th>
+                <th>الإجراءات</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pharmacy in pharmacies %}
+            <tr>
+                <td>{{ pharmacy['pharmacy_id'] }}</td>
+                <td>{{ pharmacy['name'] }}</td>
+                <td>{{ pharmacy['latitude'] }}</td>
+                <td>{{ pharmacy['longitude'] }}</td>
+                <td>
+                    <form action="{{ url_for('edit_pharmacy', pharmacy_id=pharmacy['pharmacy_id']) }}" method="get">
+                        <button type="submit">تعديل</button>
+                    </form>
+                    <form action="{{ url_for('delete_pharmacy', pharmacy_id=pharmacy['pharmacy_id']) }}" method="post">
+                        <button type="submit" onclick="return confirm('هل أنت متأكد من حذف هذه الصيدلية؟');">حذف</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- إضافة صيدلية -->
+    <h3>إضافة صيدلية</h3>
+    <form action="/add_pharmacy" method="post">
+        <div class="form-group">
+            <input type="text" name="name" placeholder="اسم الصيدلية" required>
+        </div>
+        <div class="form-group">
+            <input type="number" step="any" name="latitude" placeholder="خط العرض" required>
+        </div>
+        <div class="form-group">
+            <input type="number" step="any" name="longitude" placeholder="خط الطول" required>
+        </div>
+        <input type="submit" value="إضافة صيدلية">
+    </form>
+
+    <!-- إدارة الأدوية -->
+    <h2>الأدوية</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>رقم الدواء</th>
+                <th>اسم الدواء</th>
+                <th>الوصف</th>
+                <th>الإجراءات</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for medicine in medicines %}
+            <tr>
+                <td>{{ medicine['medicine_id'] }}</td>
+                <td>{{ medicine['name'] }}</td>
+                <td>{{ medicine['description'] }}</td>
+                <td>
+                    <form action="{{ url_for('edit_medicine', medicine_id=medicine['medicine_id']) }}" method="get">
+                        <button type="submit">تعديل</button>
+                    </form>
+                    <form action="{{ url_for('delete_medicine', medicine_id=medicine['medicine_id']) }}" method="post">
+                        <button type="submit" onclick="return confirm('هل أنت متأكد من حذف هذا الدواء؟');">حذف</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- إضافة دواء -->
+    <h3>إضافة دواء</h3>
+    <form action="/add_medicine" method="post">
+        <div class="form-group">
+            <input type="text" name="name" placeholder="اسم الدواء" required>
+        </div>
+        <div class="form-group">
+            <input type="text" name="description" placeholder="وصف الدواء" required>
+        </div>
+        <input type="submit" value="إضافة دواء">
+    </form>
+
+    <!-- إضافة دواء إلى صيدلية -->
+    <h3>إضافة دواء إلى صيدلية</h3>
+    <form action="/add_medicine_to_pharmacy" method="post">
+        <div class="form-group">
+            <select name="pharmacy_id" required>
+                <option value="">اختر صيدلية</option>
+                {% for pharmacy in pharmacies %}
+                <option value="{{ pharmacy['pharmacy_id'] }}">{{ pharmacy['name'] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <select name="medicine_id" required>
+                <option value="">اختر دواء</option>
+                {% for medicine in medicines %}
+                <option value="{{ medicine['medicine_id'] }}">{{ medicine['name'] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <input type="number" name="quantity" placeholder="الكمية" min="1" required>
+        </div>
+        <input type="submit" value="إضافة">
+    </form>
+</body>
+</html>
